@@ -11,6 +11,7 @@ The current main flow is: create an Agora convo agent session through the Sentin
 ## Features
 
 - Real-time voice conversation: microphone capture, AEC, uplink and downlink audio
+- Voiceprint enrollment upload: optional v2 flow records a voice sample and uploads it to OSS before conversation start
 - Real-time video uplink: camera-enabled boards can send video streams
 - Display pipeline: supports `EmoteDisplay`, `LVGL/LcdDisplay`, and `OledDisplay`
 - Datastream display control: supports `display_emotion` and `display_weather`
@@ -52,6 +53,7 @@ Application
 | --- | --- |
 | `main/application.*` | Main device state machine, session start/stop, datastream dispatch |
 | `main/agora/` | Sentino session creation, Agora RTC, audio/video bridge |
+| `main/voiceprint/` | Voiceprint sample capture, VAD-based window selection, and OSS upload |
 | `main/audio/` | Audio capture, playback, AEC, VAD, codec processing |
 | `main/display/` | Emote, LVGL, OLED, and other display backends |
 | `main/assets/` | `assets` partition loading and runtime asset access |
@@ -115,11 +117,34 @@ Also confirm these settings:
 See `sdkconfig.defaults` for example configuration:
 
 ```text
-CONFIG_SENTINO_DEFAULT_AGENT_ID="YOUR_AGENT_ID"
-CONFIG_SENTINO_AGENT_OPTIONS_JSON="[]"
+CONFIG_SENTINO_DEFAULT_AGENT_ID="e15116ba-1004-4d31-93e4-a001ae2a8258"
+CONFIG_SENTINO_AGENT_OPTIONS_JSON="[{\"id\":\"aa588e26-b980-42a2-9d66-da04c162bfcc\",\"label\":\"Agent A\"},{\"id\":\"abb54559-dafd-443a-91ea-c8fc62fad078\",\"label\":\"Agent B\"},{\"id\":\"6cda06c2-ecf3-4437-a355-bdc0eb5c1a82\",\"label\":\"Agent emotion\"},{\"id\":\"24bec7cf-56ca-4e73-89a4-78ecdc7cb927\",\"label\":\"Agent weather\"},{\"id\":\"bd39242c-f1d9-4efb-b82e-87edb8ff3ea4\",\"label\":\"Agent weather and emotion\"},{\"id\":\"e15116ba-1004-4d31-93e4-a001ae2a8258\",\"label\":\"esp32s3\"}]"
 ```
 
-### 2. List Supported Boards
+### 2. Configure Voiceprint Enrollment Upload (Optional, v2)
+
+v2 adds an optional voiceprint enrollment upload flow. When `VOICEPRINT_OSS_ENABLED` is enabled and no cached sample URL exists in NVS, the firmware:
+
+- plays the voiceprint start prompt
+- records up to 30 seconds of microphone PCM at 16 kHz
+- selects the best 15-second window with enough effective speech
+- uploads raw 16-bit mono `.pcm` data to Aliyun OSS through a signed `PutObject` request
+- saves the uploaded sample URL in the `voiceprint` NVS namespace for later sessions
+
+Configure these values in `main/agora_project_config.h`:
+
+- `VOICEPRINT_OSS_ENABLED`: default is `0` in the GitHub clean version; set it to `1` only after configuring OSS
+- `VOICEPRINT_OSS_BUCKET`: your OSS bucket name
+- `VOICEPRINT_OSS_ENDPOINT`: region endpoint, for example `oss-cn-shanghai.aliyuncs.com`
+- `VOICEPRINT_OSS_OBJECT_PREFIX`: object key prefix, default `voiceprints`
+- `VOICEPRINT_OSS_PUBLIC_BASE_URL`: optional public or CDN base URL; leave empty to use `https://<bucket>.<endpoint>`
+- `VOICEPRINT_STS_ACCESS_KEY_ID`, `VOICEPRINT_STS_ACCESS_KEY_SECRET`, `VOICEPRINT_STS_SECURITY_TOKEN`: temporary STS credentials used to sign the OSS upload request
+
+The current firmware-side upload code is a direct OSS upload POC. Do not commit real AK/SK, STS token, or long-lived AccessKey credentials to GitHub. For customer deployments, decide according to your backend and security model whether the device should request short-lived, least-privilege STS credentials from your service before uploading, or whether the device should upload the voiceprint audio to your service and let the service store it in OSS. The firmware can be extended to request and refresh STS credentials before calling the OSS upload path.
+
+Voiceprint audio may be biometric or otherwise sensitive data. Production deployments should handle user consent, retention, access control, transport security, and storage policy at the business-service layer.
+
+### 3. List Supported Boards
 
 ```bash
 python scripts/select_board.py --list-boards
@@ -127,7 +152,7 @@ python scripts/select_board.py --list-boards
 
 The current repository is adapted for `esp-vocat` and `sensecap-watcher`.
 
-### 3. Select a Board and Build
+### 4. Select a Board and Build
 
 Example: `esp-vocat`
 

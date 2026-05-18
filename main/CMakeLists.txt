@@ -36,10 +36,11 @@ set(SOURCES "audio/audio_codec.cc"
             "agora/agora_rtc_session.cc"
             "agora/agora_audio_bridge.cc"
             "agora/agora_video_bridge.cc"
+            "voiceprint/voiceprint_uploader.cc"
             "main.cc"
             )
 
-set(INCLUDE_DIRS "." "display" "display/lvgl_display" "display/lvgl_display/jpg" "audio" "audio/demuxer" "agora")
+set(INCLUDE_DIRS "." "display" "display/lvgl_display" "display/lvgl_display/jpg" "audio" "audio/demuxer" "agora" "voiceprint")
 
 # Add board common files
 list(APPEND SOURCES

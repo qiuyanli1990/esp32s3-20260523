@@ -95,6 +95,7 @@ private:
     std::atomic<bool> session_running_{false};
     std::atomic<bool> session_command_pending_{false};
     std::atomic<bool> stop_requested_{false};
+    std::string last_voiceprint_sample_url_;
     int clock_ticks_ = 0;
 
     void HandleStateChangedEvent();
