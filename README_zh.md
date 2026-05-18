@@ -11,6 +11,7 @@
 ## 主要功能
 
 - 实时语音对话：麦克风采集、AEC、音频上下行
+- 声纹录入上传：可在对话开始前录制声纹样本并上传到OSS生成sample_url
 - 实时视频上行：带摄像头的板子可接入视频流
 - 屏显链路：支持 `EmoteDisplay`、`LVGL/LcdDisplay`、`OledDisplay`
 - datastream 屏显：支持 `display_emotion` 和 `display_weather`
@@ -52,6 +53,7 @@ Application
 | --- | --- |
 | `main/application.*` | 设备主状态机、会话起停、datastream 分发 |
 | `main/agora/` | Sentino 会话创建、Agora RTC、音视频桥接 |
+| `main/voiceprint/` | 声纹样本采集、基于 VAD 的有效片段选择和 OSS 上传 |
 | `main/audio/` | 音频采集、播放、AEC、VAD、编解码处理 |
 | `main/display/` | Emote、LVGL、OLED 等显示后端 |
 | `main/assets/` | `assets` 分区加载与运行时素材访问 |
@@ -112,16 +114,39 @@ cd <repo-dir>
 - `CONFIG_SENTINO_DEFAULT_AGENT_ID`：填自己捏的agent id或者平台上现有的agent id
 - `CONFIG_SENTINO_AGENT_OPTIONS_JSON`：配置设备侧可选 agent 列表
 见sdkconfig.defaults配置
-CONFIG_SENTINO_DEFAULT_AGENT_ID="YOUR_AGENT_ID"
-CONFIG_SENTINO_AGENT_OPTIONS_JSON="[]"
+CONFIG_SENTINO_DEFAULT_AGENT_ID="e15116ba-1004-4d31-93e4-a001ae2a8258"
+CONFIG_SENTINO_AGENT_OPTIONS_JSON="[{\"id\":\"aa588e26-b980-42a2-9d66-da04c162bfcc\",\"label\":\"Agent A\"},{\"id\":\"abb54559-dafd-443a-91ea-c8fc62fad078\",\"label\":\"Agent B\"},{\"id\":\"6cda06c2-ecf3-4437-a355-bdc0eb5c1a82\",\"label\":\"Agent emotion\"},{\"id\":\"24bec7cf-56ca-4e73-89a4-78ecdc7cb927\",\"label\":\"Agent weather\"},{\"id\":\"bd39242c-f1d9-4efb-b82e-87edb8ff3ea4\",\"label\":\"Agent weather and emotion\"},{\"id\":\"e15116ba-1004-4d31-93e4-a001ae2a8258\",\"label\":\"esp32s3\"}]"
 
-### 2. 查看支持的板型
+### 2. 配置声纹录入上传
+
+增加了可选的声纹录入上传链路。开启 `VOICEPRINT_OSS_ENABLED` 后，如果设备 NVS 里还没有缓存过声纹样本 URL，固件会在开始对话前执行：
+
+- 播放声纹录入提示音
+- 以 16 kHz 采集最长 30 秒麦克风 PCM
+- 根据 VAD / RMS 选出有效语音更充分的 15 秒片段
+- 将 16-bit mono `.pcm` 原始音频通过签名 `PutObject` 请求上传到阿里云 OSS
+- 把上传后的样本 URL 保存在 `voiceprint` NVS namespace，后续会话复用该 URL
+
+相关配置都在 `main/agora_project_config.h`：
+
+- `VOICEPRINT_OSS_ENABLED`：默认是 `0`，配置好 OSS 后再改成 `1`
+- `VOICEPRINT_OSS_BUCKET`：OSS bucket 名称
+- `VOICEPRINT_OSS_ENDPOINT`：OSS 区域 endpoint，例如 `oss-cn-shanghai.aliyuncs.com`
+- `VOICEPRINT_OSS_OBJECT_PREFIX`：对象前缀，默认 `voiceprints`
+- `VOICEPRINT_OSS_PUBLIC_BASE_URL`：可选的公开访问或 CDN 基础 URL；留空时使用 `https://<bucket>.<endpoint>`
+- `VOICEPRINT_STS_ACCESS_KEY_ID`、`VOICEPRINT_STS_ACCESS_KEY_SECRET`、`VOICEPRINT_STS_SECURITY_TOKEN`：用于签名上传请求的 STS 临时凭证
+
+当前固件里的上传实现是设备端直传 OSS 的 POC，不要把真实 AK/SK、STS token 或长期 AccessKey 提交到 GitHub。客户需要根据自身业务和安全要求决定：是让设备先从业务服务端获取短期、最小权限的 STS 临时凭证后直传 OSS，还是让设备把声纹音频传给业务服务端，由服务端再转存 OSS。固件侧可以在调用 OSS 上传前扩展“向服务端请求/刷新 STS 凭证”的逻辑。
+
+声纹音频可能属于生物特征或敏感数据。生产环境需要在业务服务端层面处理用户授权、数据留存、访问控制、传输安全和存储策略。
+
+### 3. 查看支持的板型
 
 ```bash
 python scripts/select_board.py --list-boards // 目前代码仓库只适配了vocat和sensecap watcher
 ```
 
-### 3. 选择板型并编译
+### 4. 选择板型并编译
 
 示例：`esp-vocat`
 

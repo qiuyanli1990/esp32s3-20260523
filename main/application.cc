@@ -12,12 +12,15 @@
 #include <initializer_list>
 #include <unordered_map>
 #include <unordered_set>
+#include <utility>
 
 #include "assets.h"
 #include "assets/lang_config.h"
 #include "board.h"
 #include "display.h"
+#include "settings.h"
 #include "system_info.h"
+#include "voiceprint/voiceprint_uploader.h"
 #include <wifi_manager.h>
 
 #define TAG "Application"
@@ -32,6 +35,8 @@ struct SessionTaskArgs {
 constexpr uint32_t kAgoraAgentTaskStackBytes = 16 * 1024;
 constexpr uint32_t kAgoraRtcTaskStackBytes = 8 * 1024;
 constexpr int kDefaultWeatherDisplayDurationMs = 5000;
+constexpr char kVoiceprintSettingsNamespace[] = "voiceprint";
+constexpr char kVoiceprintSampleUrlKey[] = "sample_url";
 
 struct WeatherDisplayAction {
     std::string condition_id;
@@ -73,6 +78,19 @@ std::string Trim(const std::string& value) {
         --end;
     }
     return value.substr(start, end - start);
+}
+
+std::string LoadVoiceprintSampleUrl() {
+    Settings settings(kVoiceprintSettingsNamespace, false);
+    return Trim(settings.GetString(kVoiceprintSampleUrlKey, ""));
+}
+
+void SaveVoiceprintSampleUrl(const std::string& sample_url) {
+    if (sample_url.empty()) {
+        return;
+    }
+    Settings settings(kVoiceprintSettingsNamespace, true);
+    settings.SetString(kVoiceprintSampleUrlKey, sample_url);
 }
 
 std::string NormalizeEmotionName(const std::string& value) {
@@ -1243,6 +1261,39 @@ bool Application::StartAgoraAgentInternal() {
     if (!network_connected_) {
         SetError("Network is not connected");
         return false;
+    }
+
+    last_voiceprint_sample_url_.clear();
+    if (VoiceprintUploader::IsEnabled()) {
+        last_voiceprint_sample_url_ = LoadVoiceprintSampleUrl();
+        if (!last_voiceprint_sample_url_.empty()) {
+            ESP_LOGI(TAG, "Use cached voiceprint sample URL: %s", last_voiceprint_sample_url_.c_str());
+        } else {
+            auto report_voiceprint_status = [this](const char* message) {
+                std::string message_copy = message ? message : "";
+                if (message_copy.empty()) {
+                    return;
+                }
+                Schedule([message = std::move(message_copy)]() {
+                    auto display = Board::GetInstance().GetDisplay();
+                    if (display != nullptr) {
+                        display->SetChatMessage("subtitle", message.c_str());
+                        display->ShowNotification(message.c_str(), 3000);
+                    }
+                });
+            };
+            std::string sample_url;
+            std::string voiceprint_error;
+            if (VoiceprintUploader::CaptureAndUpload(audio_service_, audio_codec_, &sample_url,
+                    &voiceprint_error, report_voiceprint_status)) {
+                last_voiceprint_sample_url_ = sample_url;
+                SaveVoiceprintSampleUrl(last_voiceprint_sample_url_);
+                ESP_LOGI(TAG, "Voiceprint sample ready and saved: %s", last_voiceprint_sample_url_.c_str());
+            } else {
+                ESP_LOGW(TAG, "Voiceprint sample unavailable, continuing conversation start: %s",
+                    voiceprint_error.empty() ? "unknown error" : voiceprint_error.c_str());
+            }
+        }
     }
 
     if (!agora_agent_manager_.Initialize()) {

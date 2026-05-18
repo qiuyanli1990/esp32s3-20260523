@@ -1,7 +1,13 @@
-name: Build Firmware
+name: Build Boards
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - ci/* # for ci test
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: read
@@ -14,7 +20,7 @@ jobs:
       variants: ${{ steps.select.outputs.variants }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -33,13 +39,13 @@ jobs:
         run: |
           EVENT_NAME="${{ github.event_name }}"
 
-          # push or manual dispatch builds all variants
-          if [[ "$EVENT_NAME" == "push" || "$EVENT_NAME" == "workflow_dispatch" ]]; then
+          # push 到 main 分支，编译全部变体
+          if [[ "$EVENT_NAME" == "push" ]]; then
             echo "variants=$ALL_VARIANTS" >> $GITHUB_OUTPUT
             exit 0
           fi
 
-          # pull_request builds affected variants
+          # pull_request 场景
           BASE_SHA="${{ github.event.pull_request.base.sha }}"
           HEAD_SHA="${{ github.event.pull_request.head.sha }}"
           echo "Base: $BASE_SHA, Head: $HEAD_SHA"
@@ -81,12 +87,12 @@ jobs:
     needs: prepare
     if: ${{ needs.prepare.outputs.variants != '[]' }}
     strategy:
-      fail-fast: false
+      fail-fast: false  # 单个变体失败不影响其它变体
       matrix:
         include: ${{ fromJson(needs.prepare.outputs.variants) }}
     runs-on: ubuntu-latest
     container:
-      image: espressif/idf:v5.5.4
+      image: espressif/idf:v5.5.2
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -100,6 +106,6 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: sentino_${{ matrix.full_name }}_${{ github.sha }}
+          name: xiaozhi_${{ matrix.full_name }}_${{ github.sha }}
           path: build/merged-binary.bin
           if-no-files-found: error
