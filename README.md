@@ -11,7 +11,7 @@ The current main flow is: create an Agora convo agent session through the Sentin
 ## Features
 
 - Real-time voice conversation: microphone capture, AEC, uplink and downlink audio
-- Voiceprint enrollment upload: optional v2 flow records a voice sample and uploads it to OSS before conversation start
+- Voiceprint enrollment upload: records a voice sample and uploads it to OSS before conversation start
 - Real-time video uplink: camera-enabled boards can send video streams
 - Display pipeline: supports `EmoteDisplay`, `LVGL/LcdDisplay`, and `OledDisplay`
 - Datastream display control: supports `display_emotion` and `display_weather`
@@ -121,9 +121,9 @@ CONFIG_SENTINO_DEFAULT_AGENT_ID="e15116ba-1004-4d31-93e4-a001ae2a8258"
 CONFIG_SENTINO_AGENT_OPTIONS_JSON="[{\"id\":\"aa588e26-b980-42a2-9d66-da04c162bfcc\",\"label\":\"Agent A\"},{\"id\":\"abb54559-dafd-443a-91ea-c8fc62fad078\",\"label\":\"Agent B\"},{\"id\":\"6cda06c2-ecf3-4437-a355-bdc0eb5c1a82\",\"label\":\"Agent emotion\"},{\"id\":\"24bec7cf-56ca-4e73-89a4-78ecdc7cb927\",\"label\":\"Agent weather\"},{\"id\":\"bd39242c-f1d9-4efb-b82e-87edb8ff3ea4\",\"label\":\"Agent weather and emotion\"},{\"id\":\"e15116ba-1004-4d31-93e4-a001ae2a8258\",\"label\":\"esp32s3\"}]"
 ```
 
-### 2. Configure Voiceprint Enrollment Upload (Optional, v2)
+### 2. Configure Voiceprint Enrollment Upload (Optional)
 
-v2 adds an optional voiceprint enrollment upload flow. When `VOICEPRINT_OSS_ENABLED` is enabled and no cached sample URL exists in NVS, the firmware:
+adds an optional voiceprint enrollment upload flow. When `VOICEPRINT_OSS_ENABLED` is enabled and no cached sample URL exists in NVS, the firmware:
 
 - plays the voiceprint start prompt
 - records up to 30 seconds of microphone PCM at 16 kHz
