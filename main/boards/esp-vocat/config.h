@@ -7,10 +7,8 @@
 
 #define AUDIO_INPUT_SAMPLE_RATE  24000   
 #define AUDIO_OUTPUT_SAMPLE_RATE 24000
-// ESP-VoCat exposes a dual-mic array on ES7210, but not a dedicated hardware
-// playback reference channel. Treat it as a single near-end capture path and
-// let the common software speaker tap provide the AEC reference when enabled.
-#define AUDIO_INPUT_REFERENCE    false
+// Use the ES7210 hardware input reference channel for device-side AEC.
+#define AUDIO_INPUT_REFERENCE    true
 
 #define CORDEC_POWER_CTRL  GPIO_NUM_48
 

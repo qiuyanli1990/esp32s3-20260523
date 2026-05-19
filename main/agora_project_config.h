@@ -6,7 +6,7 @@
 // Sentino conversation API configuration.
 // Fill these values with your own tenant credentials before building firmware.
 #define SENTINO_API_BASE_URL "https://api.sentino.jp"
-#define SENTINO_API_BEARER_TOKEN "YOUR_SENTINO_API_BEARER_TOKEN"
+#define SENTINO_API_BEARER_TOKEN ""
 
 // Agent selection defaults. The provisioning page can override the active agent_id
 // and persists the selection in NVS under the "wifi" namespace.
@@ -22,7 +22,7 @@
 // Conversation request parameters.
 #define SENTINO_CONVERSATION_SAMPLE_RATE 16000
 #define SENTINO_LANGUAGES_JSON "[\"zh\",\"en\"]"
-#define SENTINO_GREETING_MESSAGE ""
+#define SENTINO_GREETING_MESSAGE "Hello! I’m your robot assistant. I can check the weather, display emotions, search the web, and help you find nearby restaurants."
 
 // Optional device metadata attached to the conversation request.
 #define SENTINO_DEVICE_TIMEZONE "Asia/Shanghai"

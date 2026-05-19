@@ -14,7 +14,10 @@ BoxAudioCodec::BoxAudioCodec(void* i2c_master_handle, int input_sample_rate, int
     input_channels_ = input_reference_ ? 2 : 1; // 输入通道数
     input_sample_rate_ = input_sample_rate;
     output_sample_rate_ = output_sample_rate;
-    input_gain_ = 30;
+    input_gain_ = 80;
+#if CONFIG_BOARD_TYPE_ESP_VOCAT
+    SetReferenceOrder(AudioReferenceOrder::kReferenceAfterNearEnd);
+#endif
 
     CreateDuplexChannels(mclk, bclk, ws, dout, din);
 
@@ -203,11 +206,7 @@ void BoxAudioCodec::EnableInput(bool enable) {
             fs.channel_mask |= ESP_CODEC_DEV_MAKE_CHANNEL_MASK(1);
         }
         ESP_ERROR_CHECK(esp_codec_dev_open(input_dev_, &fs));
-#if CONFIG_BOARD_TYPE_ESP_VOCAT
-        ESP_ERROR_CHECK(esp_codec_dev_set_in_gain(input_dev_, input_gain_));
-#else
         ESP_ERROR_CHECK(esp_codec_dev_set_in_channel_gain(input_dev_, ESP_CODEC_DEV_MAKE_CHANNEL_MASK(0), input_gain_));
-#endif
     } else {
         ESP_ERROR_CHECK(esp_codec_dev_close(input_dev_));
     }
