@@ -1,0 +1,74 @@
+{
+  "style": "flat",
+  "upstream": "meteocons",
+  "conditions": {
+    "clear-day": {
+      "animated": "flat/animated/clear-day.svg",
+      "static": "flat/static/clear-day.svg"
+    },
+    "clear-night": {
+      "animated": "flat/animated/clear-night.svg",
+      "static": "flat/static/clear-night.svg"
+    },
+    "partly-cloudy-day": {
+      "animated": "flat/animated/partly-cloudy-day.svg",
+      "static": "flat/static/partly-cloudy-day.svg"
+    },
+    "partly-cloudy-night": {
+      "animated": "flat/animated/partly-cloudy-night.svg",
+      "static": "flat/static/partly-cloudy-night.svg"
+    },
+    "mostly-clear-day": {
+      "animated": "flat/animated/mostly-clear-day.svg",
+      "static": "flat/static/mostly-clear-day.svg"
+    },
+    "mostly-clear-night": {
+      "animated": "flat/animated/mostly-clear-night.svg",
+      "static": "flat/static/mostly-clear-night.svg"
+    },
+    "cloudy": {
+      "animated": "flat/animated/cloudy.svg",
+      "static": "flat/static/cloudy.svg"
+    },
+    "overcast": {
+      "animated": "flat/animated/overcast.svg",
+      "static": "flat/static/overcast.svg"
+    },
+    "drizzle": {
+      "animated": "flat/animated/drizzle.svg",
+      "static": "flat/static/drizzle.svg"
+    },
+    "rain": {
+      "animated": "flat/animated/rain.svg",
+      "static": "flat/static/rain.svg"
+    },
+    "thunderstorms": {
+      "animated": "flat/animated/thunderstorms.svg",
+      "static": "flat/static/thunderstorms.svg"
+    },
+    "snow": {
+      "animated": "flat/animated/snow.svg",
+      "static": "flat/static/snow.svg"
+    },
+    "sleet": {
+      "animated": "flat/animated/sleet.svg",
+      "static": "flat/static/sleet.svg"
+    },
+    "fog": {
+      "animated": "flat/animated/fog.svg",
+      "static": "flat/static/fog.svg"
+    },
+    "haze": {
+      "animated": "flat/animated/haze.svg",
+      "static": "flat/static/haze.svg"
+    },
+    "mist": {
+      "animated": "flat/animated/mist.svg",
+      "static": "flat/static/mist.svg"
+    },
+    "wind": {
+      "animated": "flat/animated/wind.svg",
+      "static": "flat/static/wind.svg"
+    }
+  }
+}

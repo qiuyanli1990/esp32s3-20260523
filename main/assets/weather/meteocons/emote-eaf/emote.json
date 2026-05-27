@@ -1,0 +1,104 @@
+[
+    {
+        "emote": "weather-clear-day",
+        "src": "weather-clear-day.eaf",
+        "loop": true,
+        "fps": 8
+    },
+    {
+        "emote": "weather-clear-night",
+        "src": "weather-clear-night.eaf",
+        "loop": true,
+        "fps": 8
+    },
+    {
+        "emote": "weather-cloudy",
+        "src": "weather-cloudy.eaf",
+        "loop": true,
+        "fps": 8
+    },
+    {
+        "emote": "weather-drizzle",
+        "src": "weather-drizzle.eaf",
+        "loop": true,
+        "fps": 8
+    },
+    {
+        "emote": "weather-fog",
+        "src": "weather-fog.eaf",
+        "loop": true,
+        "fps": 8
+    },
+    {
+        "emote": "weather-haze",
+        "src": "weather-haze.eaf",
+        "loop": true,
+        "fps": 8
+    },
+    {
+        "emote": "weather-mist",
+        "src": "weather-mist.eaf",
+        "loop": true,
+        "fps": 8
+    },
+    {
+        "emote": "weather-mostly-clear-day",
+        "src": "weather-mostly-clear-day.eaf",
+        "loop": true,
+        "fps": 8
+    },
+    {
+        "emote": "weather-mostly-clear-night",
+        "src": "weather-mostly-clear-night.eaf",
+        "loop": true,
+        "fps": 8
+    },
+    {
+        "emote": "weather-overcast",
+        "src": "weather-overcast.eaf",
+        "loop": true,
+        "fps": 8
+    },
+    {
+        "emote": "weather-partly-cloudy-day",
+        "src": "weather-partly-cloudy-day.eaf",
+        "loop": true,
+        "fps": 8
+    },
+    {
+        "emote": "weather-partly-cloudy-night",
+        "src": "weather-partly-cloudy-night.eaf",
+        "loop": true,
+        "fps": 8
+    },
+    {
+        "emote": "weather-rain",
+        "src": "weather-rain.eaf",
+        "loop": true,
+        "fps": 8
+    },
+    {
+        "emote": "weather-sleet",
+        "src": "weather-sleet.eaf",
+        "loop": true,
+        "fps": 8
+    },
+    {
+        "emote": "weather-snow",
+        "src": "weather-snow.eaf",
+        "loop": true,
+        "fps": 8
+    },
+    {
+        "emote": "weather-thunderstorms",
+        "src": "weather-thunderstorms.eaf",
+        "loop": true,
+        "fps": 8
+    },
+    {
+        "emote": "weather-wind",
+        "src": "weather-wind.eaf",
+        "loop": true,
+        "fps": 8
+    }
+]
