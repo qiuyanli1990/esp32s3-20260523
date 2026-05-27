@@ -1,9 +1,4 @@
-<p align="center">
-  <img width="80%" align="center" src="../../../docs/V1/electron-bot.png"alt="logo">
-</p>
-  <h1 align="center">
-  electronBot
-</h1>
+# electronBot
 
 ## 简介
 
@@ -70,6 +65,5 @@ electronBot是稚晖君开源的一个桌面级小机器工具人，外观设计
 > - steps: 1-3次 (简短自然)
 > - speed: 800-1200ms (自然节奏)
 > - amount: 手部20-40, 身体30-60度, 头部5-12度
-
 
 

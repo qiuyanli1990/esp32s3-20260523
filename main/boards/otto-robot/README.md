@@ -1,9 +1,4 @@
-<p align="center">
-  <img width="80%" align="center" src="../../../docs/V1/otto-robot.png"alt="logo">
-</p>
-  <h1 align="center">
-  ottoRobot
-</h1>
+# ottoRobot
 
 ## 简介
 
@@ -204,4 +199,3 @@ otto 机器人具有丰富的动作能力，包括行走、转向、跳跃、摇
 - "停止" / "停下"
 
 **说明**: 小智控制机器人动作是创建新的任务在后台控制，动作执行期间仍可接受新的语音指令。可以通过"停止"语音指令立即停下Otto。
-

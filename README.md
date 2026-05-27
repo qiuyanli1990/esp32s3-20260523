@@ -60,6 +60,8 @@ Application
 | `main/boards/<board>/` | Board-level GPIO, codec, display, camera, and network initialization |
 | `docs/sentino-conversation.md` | Current conversation flow documentation |
 | `docs/custom-board.md` | Custom board porting guide |
+| `docs/aec-board-matrix.md` | Device-side AEC mode matrix for supported codec paths |
+| `docs/korvo2_aec_integration_code_zh.md` | Korvo-2 AEC integration notes |
 
 ## Environment Setup
 
@@ -334,3 +336,5 @@ idf.py flash monitor
 
 - `docs/sentino-conversation.md`
 - `docs/custom-board.md`
+- `docs/aec-board-matrix.md`
+- `docs/korvo2_aec_integration_code_zh.md`

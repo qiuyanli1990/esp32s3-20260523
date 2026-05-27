@@ -9,7 +9,7 @@ python scripts/release.py sensecap-watcher -c config_en.json
 `release.py` automatically:
 
 - runs `idf.py set-target esp32s3`
-- reads `sdkconfig_append` from [config_en.json](/Users/qiuyanli/xiaozhi-esp32/main/boards/sensecap-watcher/config_en.json)
+- reads `sdkconfig_append` from [config_en.json](config_en.json)
 - appends the board-specific required config items
 
 ## Agora SDK Location
@@ -44,7 +44,7 @@ Select the board:
 Xiaozhi Assistant -> Board Type -> SenseCAP Watcher
 ```
 
-The board-specific extra settings are already defined in [config_en.json](/Users/qiuyanli/xiaozhi-esp32/main/boards/sensecap-watcher/config_en.json).
+The board-specific extra settings are already defined in [config_en.json](config_en.json).
 
 If you use `release.py`, they are appended automatically.
 If you build manually, make sure your config matches them:

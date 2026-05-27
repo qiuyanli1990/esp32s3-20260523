@@ -60,6 +60,8 @@ Application
 | `main/boards/<board>/` | 板级 GPIO、Codec、Display、Camera、Network 初始化 |
 | `docs/sentino-conversation.md` | 当前会话链路说明 |
 | `docs/custom-board.md` | 自定义开发板适配说明 |
+| `docs/aec-board-matrix.md` | 各 Codec 路径的设备端 AEC 模式矩阵 |
+| `docs/korvo2_aec_integration_code_zh.md` | Korvo-2 AEC 集成说明 |
 
 ## 环境准备
 
@@ -334,3 +336,5 @@ idf.py flash monitor
 
 - `docs/sentino-conversation.md`
 - `docs/custom-board.md`
+- `docs/aec-board-matrix.md`
+- `docs/korvo2_aec_integration_code_zh.md`
